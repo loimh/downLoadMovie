@@ -15,10 +15,10 @@ public class DownLoadMovieServiceImpl implements DownLoadMovieService {
     ExecutorService fixedThreadPool = Executors.newFixedThreadPool(3);
     private static Logger LOGGER = LoggerFactory.getLogger(DownLoadMovieServiceImpl.class);
     @Override
-    public void downLoadMovie() {
+    public void downLoadMovie(String downLoadPath,String movieUrl) {
         fixedThreadPool.execute(new Runnable() {
             public void run() {
-             runShell("H:\\movie","https://v.qq.com/x/cover/uwr8gse5tajsfgj/g0031lpsten.html");
+             runShell(downLoadPath,movieUrl);
             }
         });
 }
