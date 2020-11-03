@@ -18,18 +18,17 @@ public class DownLoadMovieServiceImpl implements DownLoadMovieService {
     public void downLoadMovie() {
         fixedThreadPool.execute(new Runnable() {
             public void run() {
-                runShell("H:\\movie");
+             runShell("H:\\movie","https://v.qq.com/x/cover/uwr8gse5tajsfgj/g0031lpsten.html");
             }
         });
-//        runShell("H:\movie");
 }
 
     //脚本参数:1.applicationName:应用名称 2.dir:源码路径 3.bundle identifier 4.打包版本号:version 5.流水版本号:versionCode 6.App名字 7.创建安装包的时间 8.服务器地址 9.appkey 10.描述文件地址
-    public static void runShell(String downLoadPath){
+    public static void runShell(String downLoadPath,String movieUrl){
         InputStreamReader stdISR = null;
         InputStreamReader errISR = null;
         Process process = null;
-        String[] command = new String[]{"./src/main/java/com/movie/download/serviceImpl/downLoadMovie.bat",downLoadPath};
+        String[] command = new String[]{"./src/main/java/com/movie/download/serviceImpl/downLoadMovie.bat",downLoadPath,movieUrl};
         try {
 
             process = Runtime.getRuntime().exec(command);
@@ -47,8 +46,13 @@ public class DownLoadMovieServiceImpl implements DownLoadMovieService {
             while (!outputGobbler.isReady()) {
                 Thread.sleep(10);
             }
-            process.waitFor();
-            LOGGER.info("打包成功");
+            int exitValue = process.waitFor();
+            if (0 != exitValue) {
+               LOGGER.info("下载失败");
+            }else{
+                LOGGER.info("下载成功");
+            }
+
         } catch (IOException | InterruptedException e) {
             LOGGER.error(e.getMessage(),e);
         } finally {
